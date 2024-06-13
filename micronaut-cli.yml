@@ -1,0 +1,6 @@
+applicationType: cli
+defaultPackage: dev.vrba.discord
+testFramework: kotest
+sourceLanguage: kotlin
+buildTool: gradle_kotlin
+features: [app-name, graalvm, gradle, http-client-test, kapt, kotest, kotlin, kotlin-extension-functions, logback, micronaut-build, picocli, picocli-kotest, picocli-kotlin-application, readme, redis-lettuce, serialization-jackson, shade, yaml, yaml-build]

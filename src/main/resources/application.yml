@@ -1,0 +1,4 @@
+micronaut:
+  application:
+    name: roulette-arena
+redis.uri: redis://localhost
