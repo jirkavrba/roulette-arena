@@ -9,7 +9,7 @@ plugins {
 version = "0.1"
 group = "dev.vrba.discord"
 
-val kotlinVersion=project.properties.get("kotlinVersion")
+val kotlinVersion = project.properties.get("kotlinVersion")
 repositories {
     mavenCentral()
 }
@@ -23,13 +23,14 @@ dependencies {
     implementation("io.micronaut.picocli:micronaut-picocli")
     implementation("io.micronaut.redis:micronaut-redis-lettuce")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+    implementation("dev.kord:kord-core:0.14.0")
+    implementation("dev.kord.x:emoji:0.5.0")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("org.yaml:snakeyaml")
 }
-
 
 application {
     mainClass = "dev.vrba.discord.RouletteArenaCommand"
@@ -51,6 +52,3 @@ micronaut {
         annotations("dev.vrba.discord.*")
     }
 }
-
-
-

@@ -1,6 +1,7 @@
 package dev.vrba.discord
 
 import io.micronaut.configuration.picocli.PicocliRunner
+import jakarta.inject.Inject
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 
@@ -17,7 +18,11 @@ class RouletteArenaCommand : Runnable {
     )
     private lateinit var token: String
 
+    @Inject
+    private lateinit var bot: DiscordBot
+
     override fun run() {
+        bot.run(token)
     }
 
     companion object {
