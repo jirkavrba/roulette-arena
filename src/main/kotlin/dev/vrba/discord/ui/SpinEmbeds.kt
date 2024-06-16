@@ -1,18 +1,59 @@
 package dev.vrba.discord.ui
 
+import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
+import dev.kord.core.entity.effectiveName
+import dev.kord.core.entity.interaction.ButtonInteraction
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.MessageBuilder
 import dev.kord.rest.builder.message.actionRow
+import dev.kord.rest.builder.message.create.UserMessageCreateBuilder
 import dev.kord.rest.builder.message.embed
 import dev.kord.x.emoji.Emojis
+import dev.vrba.discord.domain.Bet
 import dev.vrba.discord.domain.DOUBLE_ZERO
 import dev.vrba.discord.domain.RED_NUMBERS
 import dev.vrba.discord.domain.ZERO
+import dev.vrba.discord.domain.asDisplayNumber
 
 const val ROULETTE_PNG = "https://raw.githubusercontent.com/jirkavrba/roulette-arena/main/src/main/resources/roulette.png"
 const val ROULETTE_COLUMN_PNG = "https://raw.githubusercontent.com/jirkavrba/roulette-arena/main/src/main/resources/roulette-column.png"
 const val ROULETTE_DOZEN_PNG = "https://raw.githubusercontent.com/jirkavrba/roulette-arena/main/src/main/resources/roulette-dozen.png"
+
+fun UserMessageCreateBuilder.spinResultEmbed(
+    interaction: ButtonInteraction,
+    bet: Bet,
+    number: Int,
+    won: Boolean,
+) {
+    embed {
+        author {
+            name = interaction.user.effectiveName
+            icon = (interaction.user.avatar ?: interaction.user.defaultAvatar).cdnUrl.toUrl()
+        }
+
+        image = ROULETTE_PNG
+        title = "I rolled ${number.asDisplayNumber()}"
+        color = if (won) Color(0x57F287) else Color(0xED4245)
+        description = if (won) spinResultWinDescription(bet) else spinResultLostDescription(bet)
+    }
+}
+
+private fun spinResultWinDescription(bet: Bet): String =
+    """
+    Your bet was: **${bet.title}**, therefore you won ${bet.multiplier} times your bid ${Emojis.tada.unicode}
+    """.trimIndent()
+
+private fun spinResultLostDescription(bet: Bet): String =
+    """
+    Your bet was: **${bet.title}**, therefore it didn't match.
+    
+    Better luck next time!
+    
+    Numbers that would make you win were:
+    
+    ${bet.numbers.joinToString(", ") { it.asDisplayNumber() } }
+    """.trimIndent()
 
 fun MessageBuilder.rootBetEmbed() {
     embed {

@@ -1,12 +1,17 @@
 package dev.vrba.discord.commands
 
+import dev.kord.common.entity.ButtonStyle
 import dev.kord.core.Kord
+import dev.kord.core.behavior.channel.asChannelOf
+import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.behavior.interaction.updateEphemeralMessage
+import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.entity.interaction.ButtonInteraction
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.ChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
+import dev.kord.rest.builder.message.actionRow
 import dev.vrba.discord.domain.Bet
 import dev.vrba.discord.domain.BlackNumberBet
 import dev.vrba.discord.domain.ColumnBet
@@ -21,7 +26,9 @@ import dev.vrba.discord.domain.RedNumberBet
 import dev.vrba.discord.domain.SingleNumberBet
 import dev.vrba.discord.domain.ZERO
 import dev.vrba.discord.domain.ZeroBet
+import dev.vrba.discord.domain.takeRandomNumber
 import dev.vrba.discord.extensions.deriveLogger
+import dev.vrba.discord.ui.button
 import dev.vrba.discord.ui.columnBetsButtons
 import dev.vrba.discord.ui.columnBetsEmbed
 import dev.vrba.discord.ui.dozenBetsButtons
@@ -38,6 +45,7 @@ import dev.vrba.discord.ui.oddEvenBetsButtons
 import dev.vrba.discord.ui.oddEvenBetsEmbed
 import dev.vrba.discord.ui.rootBetButtons
 import dev.vrba.discord.ui.rootBetEmbed
+import dev.vrba.discord.ui.spinResultEmbed
 import jakarta.inject.Singleton
 
 private const val COMMAND_NAME = "spin"
@@ -71,6 +79,7 @@ class SpinCommand : Command {
             val id = interaction.componentId
 
             when {
+                id == "ui:spin-again" -> showRootBetMenu(interaction)
                 id == "bet:dozen" -> showDozenBetMenu(interaction)
                 id == "bet:column" -> showColumnBetMenu(interaction)
                 id == "bet:low-high" -> showLowHighBetMenu(interaction)
@@ -100,6 +109,13 @@ class SpinCommand : Command {
                 id == "bet:number:$DOUBLE_ZERO" -> performSpin(interaction, DoubleZeroBet)
                 id.startsWith("bet:number:") -> performSpin(interaction, SingleNumberBet(id.removePrefix("bet:number:").toInt()))
             }
+        }
+    }
+
+    private suspend fun showRootBetMenu(interaction: ButtonInteraction) {
+        interaction.respondEphemeral {
+            rootBetEmbed()
+            rootBetButtons()
         }
     }
 
@@ -159,5 +175,20 @@ class SpinCommand : Command {
         interaction: ButtonInteraction,
         bet: Bet,
     ) {
+        val number = takeRandomNumber()
+        val won = number in bet.numbers
+
+        interaction.updateEphemeralMessage {
+            embeds = mutableListOf()
+            components = mutableListOf()
+            content = "Feel free to dismiss this message"
+        }
+
+        interaction.channel.asChannelOf<TextChannel>().createMessage {
+            spinResultEmbed(interaction, bet, number, won)
+            actionRow {
+                button("ui:spin-again", "Spin Again!", ButtonStyle.Primary)
+            }
+        }
     }
 }

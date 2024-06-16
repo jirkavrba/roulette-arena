@@ -1,7 +1,9 @@
 package dev.vrba.discord.domain
 
+import dev.kord.x.emoji.Emojis
 import java.security.SecureRandom
 import kotlin.random.asKotlinRandom
+import kotlin.text.Typography.nbsp
 
 const val ZERO = 0
 const val DOUBLE_ZERO = 100
@@ -16,3 +18,10 @@ val LOW_NUMBERS = (1..18)
 val HIGH_NUMBERS = (19..36)
 
 fun takeRandomNumber(): Int = ALL_NUMBERS.random(SecureRandom().asKotlinRandom())
+
+fun Int.asDisplayNumber() =
+    when (this) {
+        ZERO -> "${Emojis.greenCircle.unicode}${nbsp}0"
+        DOUBLE_ZERO -> "${Emojis.greenCircle.unicode}${nbsp}00"
+        else -> "${if (this in RED_NUMBERS) Emojis.redCircle.unicode else Emojis.blackCircle.unicode}${nbsp}$this"
+    }
