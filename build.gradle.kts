@@ -35,6 +35,7 @@ dependencies {
 application {
     mainClass = "dev.vrba.discord.RouletteArenaCommand"
 }
+
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
 }
@@ -43,6 +44,13 @@ kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
+}
+
+tasks {
+    val image = "ghcr.io/jirkavrba/roulette-arena"
+
+    dockerBuild { images = setOf(image) }
+    dockerBuildNative { images = setOf(image) }
 }
 
 micronaut {
