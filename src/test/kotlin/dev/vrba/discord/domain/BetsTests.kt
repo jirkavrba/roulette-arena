@@ -6,8 +6,8 @@ import io.kotest.matchers.collections.shouldContainExactly
 class BetsTests :
     StringSpec({
 
-        "Dozen should return correct numbers" {
-            DozenBet(1).numbers shouldContainExactly
+        "Column should return correct numbers" {
+            ColumnBet(1).numbers shouldContainExactly
                 setOf(
                     1,
                     4,
@@ -23,7 +23,7 @@ class BetsTests :
                     34,
                 )
 
-            DozenBet(2).numbers shouldContainExactly
+            ColumnBet(2).numbers shouldContainExactly
                 setOf(
                     2,
                     5,
@@ -39,7 +39,7 @@ class BetsTests :
                     35,
                 )
 
-            DozenBet(3).numbers shouldContainExactly
+            ColumnBet(3).numbers shouldContainExactly
                 setOf(
                     3,
                     6,
@@ -56,8 +56,8 @@ class BetsTests :
                 )
         }
 
-        "Column should return correct numbers" {
-            ColumnBet(1).numbers shouldContainExactly
+        "Dozen should return correct numbers" {
+            DozenBet(1).numbers shouldContainExactly
                 setOf(
                     1,
                     2,
@@ -73,7 +73,7 @@ class BetsTests :
                     12,
                 )
 
-            ColumnBet(13).numbers shouldContainExactly
+            DozenBet(13).numbers shouldContainExactly
                 setOf(
                     13,
                     14,
@@ -89,7 +89,7 @@ class BetsTests :
                     24,
                 )
 
-            ColumnBet(25).numbers shouldContainExactly
+            DozenBet(25).numbers shouldContainExactly
                 setOf(
                     25,
                     26,
