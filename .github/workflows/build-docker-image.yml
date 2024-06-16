@@ -31,6 +31,9 @@ jobs:
         run: ./gradlew dockerBuild
         env:
           DOCKER_IMAGE: ghcr.io/jirkavrba/roulette-arena:latest
+        permissions:
+          contents: read
+          packages: write
 
       - name: Push Docker image to container registry
         run: docker push ghcr.io/jirkavrba/roulette-arena:latest
